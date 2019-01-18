@@ -12,6 +12,75 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 
+
+# OpenHIM mediator settings
+
+OPENHIM_OPTIONS = {
+    'username': 'user@example.com',
+    'password': 'secret',
+    'apiURL': 'https://server.example.com/',
+    'verify_cert': True,
+
+    'force_config': False,
+    'interval': 10,
+
+    'register': True,
+    'heartbeat': True,
+}
+
+MEDIATOR_CONF = {
+    'urn': f'urn:uuid:{os.environ["MEDIATOR_URN"]}',
+    'version': '0.0.1',
+    'name': 'Passthrough Mediator',
+    'description': 'This is a passthrough mediator',
+    'defaultChannelConfig': [
+        {
+            'name': 'Passthrough Mediator',
+            'urlPattern': '/passthru/.*',
+            'alerts': [],
+            'txRerunAcl': [],
+            'txViewFullAcl': [],
+            'txViewAcl': [],
+            'properties': [],
+            'matchContentTypes': [],
+            'routes': [
+                {
+                    'name': 'Passthrough Mediator Route',
+                    'host': 'localhost',
+                    'port': '4000',
+                    'primary': True,
+                    'type': 'http',
+                }
+            ],
+            'allow': ['Sample Role'],
+            'type': 'http',
+        }
+    ],
+    'endpoints': [
+        {
+            'name': 'Passthrough Mediator Route',
+            'host': 'localhost',
+            'path': '/',
+            'port': '4000',
+            'primary': True,
+            'type': 'http',
+        }
+    ],
+    'configDefs': [
+        {
+            'param': 'upstreamUrl',
+            'displayName': 'Upstream URL',
+            'description': 'The URL of the service upstream of the mediator',
+            'type': 'string',
+            'template': [],
+        }
+    ],
+    'config': {
+        'upstreamUrl': 'http://sampleApplication:7001'
+    }
+}
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
