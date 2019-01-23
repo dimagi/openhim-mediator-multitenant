@@ -7,3 +7,6 @@ __pycache__/
 # Environment variables
 env/*
 !env/sample
+
+# Files for build
+git-archive.tar.gz
