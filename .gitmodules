@@ -1,0 +1,3 @@
+[submodule "submodules/openhim-mediator-utils-py"]
+	path = submodules/openhim-mediator-utils-py
+	url = git@github.com:de-laz/openhim-mediator-utils-py.git
