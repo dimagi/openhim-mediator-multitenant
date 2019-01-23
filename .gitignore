@@ -10,6 +10,8 @@ env/*
 
 # Files for build
 git-archive.tar.gz
+Dockerrun.aws.json
+eb-artifact.zip
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
