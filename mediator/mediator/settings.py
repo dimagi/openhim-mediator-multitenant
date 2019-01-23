@@ -16,10 +16,10 @@ import os
 # OpenHIM mediator settings
 
 OPENHIM_OPTIONS = {
-    'username': 'user@example.com',
-    'password': 'secret',
-    'apiURL': 'https://server.example.com/',
-    'verify_cert': True,
+    'username': os.environ['OPENHIM_USERNAME'],
+    'password': os.environ['OPENHIM_PASSWORD'],
+    'apiURL': os.environ['OPENHIM_APIURL'],
+    'verify_cert': os.environ['OPENHIM_VERIFY_CERT'].lower() not in ('0', 'false', 'no'),
 
     'force_config': False,
     'interval': 10,
@@ -31,12 +31,12 @@ OPENHIM_OPTIONS = {
 MEDIATOR_CONF = {
     'urn': f'urn:uuid:{os.environ["MEDIATOR_URN"]}',
     'version': '0.0.1',
-    'name': 'Passthrough Mediator',
-    'description': 'This is a passthrough mediator',
+    'name': os.environ['MEDIATOR_NAME'],
+    'description': os.environ['MEDIATOR_DESCRIPTION'],
     'defaultChannelConfig': [
         {
-            'name': 'Passthrough Mediator',
-            'urlPattern': '/passthru/.*',
+            'name': os.environ['MEDIATOR_NAME'],
+            'urlPattern': os.environ['MEDIATOR_URL'],
             'alerts': [],
             'txRerunAcl': [],
             'txViewFullAcl': [],
@@ -45,23 +45,23 @@ MEDIATOR_CONF = {
             'matchContentTypes': [],
             'routes': [
                 {
-                    'name': 'Passthrough Mediator Route',
-                    'host': 'localhost',
-                    'port': '4000',
+                    'name': os.environ['MEDIATOR_ROUTE_0_NAME'],
+                    'host': os.environ['MEDIATOR_ROUTE_0_HOST'],
+                    'port': os.environ['MEDIATOR_ROUTE_0_PORT'],
                     'primary': True,
                     'type': 'http',
                 }
             ],
-            'allow': ['Sample Role'],
+            'allow': [os.environ['MEDIATOR_ALLOW_ROLE']],
             'type': 'http',
         }
     ],
     'endpoints': [
         {
-            'name': 'Passthrough Mediator Route',
-            'host': 'localhost',
-            'path': '/',
-            'port': '4000',
+            'name': os.environ['MEDIATOR_ROUTE_0_NAME'],
+            'host': os.environ['MEDIATOR_ROUTE_0_HOST'],
+            'path': os.environ['MEDIATOR_ROUTE_0_PATH'],
+            'port': os.environ['MEDIATOR_ROUTE_0_PORT'],
             'primary': True,
             'type': 'http',
         }
@@ -76,7 +76,7 @@ MEDIATOR_CONF = {
         }
     ],
     'config': {
-        'upstreamUrl': 'http://sampleApplication:7001'
+        'upstreamUrl': os.environ['MEDIATOR_UPSTREAM_URL'],
     }
 }
 
@@ -89,12 +89,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'fqVfSvuOeLUQ10mvGViSSRF6L4FLsy7EvqROksWMOAG0B5Z9yy'
+SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ['DJANGO_DEBUG']
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ['DJANGO_ALLOWED_HOSTS'].split()
 
 
 # Application definition
