@@ -1,4 +1,4 @@
-FROM python:3.6
+FROM python:3.7
 
 # Create git archive with scripts/build-git-archive.sh to include required submodule
 ADD git-archive.tar.gz /usr/src/
