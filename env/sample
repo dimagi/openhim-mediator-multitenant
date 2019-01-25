@@ -1,0 +1,73 @@
+#!/bin/bash
+#
+# Values for configuring the environment where the mediator will run
+#
+# Copy this file to one named for your environment, e.g. "production" or
+# "development", and set its values accordingly.
+#
+# Set these values in the environment using
+#
+#     $ source path/to/this/file
+#
+# or using your hosting environment configuration. For example, you can
+# configure environment variables in AWS Elastic Beanstalk as follows:
+# https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-softwaresettings.html#environments-cfg-softwaresettings-console
+#
+
+if [ "$0" = "$BASH_SOURCE" ]
+then
+    echo 'Use "source" to load the environment variables into the current shell. e.g.'
+    echo "    \$ source $BASH_SOURCE"
+    exit 1
+fi
+
+
+# OpenHIM settings
+
+export OPENHIM_USERNAME=user@example.com
+export OPENHIM_PASSWORD="secret"
+
+# The API URL of the OpenHIM instance:
+export OPENHIM_APIURL='https://openhim.example.com/'
+
+# Valid values for False: "0", "False" or "No". All other values will be considered True.
+# Should be True unless OpenHIM is using a self-signed certificate
+export OPENHIM_VERIFY_CERT=True
+
+
+# Mediator settings
+
+export MEDIATOR_URN=01234567-89ab-cdef-0123-456789abcdef
+export MEDIATOR_NAME="Passthrough Mediator"
+export MEDIATOR_DESCRIPTION="This is a passthrough mediator"
+
+# Requests to this path will be forwarded to this mediator:
+export MEDIATOR_URL='/passthru/.*',
+
+export MEDIATOR_ROUTE_0_NAME="Passthrough Mediator Route"
+export MEDIATOR_ROUTE_0_HOST=localhost
+export MEDIATOR_ROUTE_0_PORT=4000
+export MEDIATOR_ROUTE_0_PATH="/"
+
+export MEDIATOR_ALLOW_ROLE="Sample Role"
+
+export MEDIATOR_UPSTREAM_URL="https://sampleApplication:7001"
+
+
+# Django settings
+
+export DJANGO_SECRET_KEY='N3acC3293AlnecjLFlu5TprTlHsTYFODlM0BAW7eM4QtbBcBH7'
+export DJANGO_DEBUG=True
+# A space-separated list of hostnames:
+export DJANGO_ALLOWED_HOSTS=""
+
+
+# Proxy settings
+
+# Valid values for False: "0", "False" or "No". All other values will be considered True.
+export PROXY_SSL_ENABLED=False
+export PROXY_CERTBOT_EMAIL=admin@example.com
+export PROXY_CERTBOT_STAGING=1
+export PROXY_LETSENCRYPT_VOLUME=/dev/null
+export PROXY_PRIMARY_DOMAIN=example.com
+export PROXY_SERVER_NAMES="example.com www.example.com server.example.com"
