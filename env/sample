@@ -71,3 +71,12 @@ export PROXY_CERTBOT_STAGING=1
 export PROXY_LETSENCRYPT_VOLUME=/dev/null
 export PROXY_PRIMARY_DOMAIN=example.com
 export PROXY_SERVER_NAMES="example.com www.example.com server.example.com"
+
+
+# Just to check this file has been sourced
+if [ -z "$BASH_SOURCE" ]
+then
+    export ENVIRONMENT_NAME=`basename $0`
+else
+    export ENVIRONMENT_NAME=`basename $BASH_SOURCE`
+fi

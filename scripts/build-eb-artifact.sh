@@ -3,6 +3,16 @@
 # Creates an AWS Elastic Beanstalk artifact for deployment
 #
 
+
+if [ -z "$ENVIRONMENT_NAME" ]
+then
+    echo Environment variables have not been set. Use
+    echo "    \$ source env/<target environment name>"
+    exit 1
+fi
+
+echo Building AWS Elastic Beanstalk artifact for $ENVIRONMENT_NAME environment
+
 rm -f eb-artifact.zip
 
 # Add git archive to artifact
