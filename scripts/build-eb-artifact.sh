@@ -19,14 +19,8 @@ rm -f eb-artifact.zip
 git archive --format=zip HEAD > eb-artifact.zip
 
 # Render config files for production
-ORIGINAL_PYTHONPATH="$PYTHONPATH"
-ORIGINAL_SETTINGS_MODULE="$DJANGO_SETTINGS_MODULE"
-export PYTHONPATH="$(pwd)/mediator"
-export DJANGO_SETTINGS_MODULE="mediator.settings.production"
 scripts/render-env.py docker/templates/mediator.conf > docker/nginx/conf.d/mediator.conf
 scripts/render-env.py docker/templates/Dockerrun.aws.json > Dockerrun.aws.json
-export PYTHONPATH="$ORIGINAL_PYTHONPATH"
-export DJANGO_SETTINGS_MODULE="$ORIGINAL_SETTINGS_MODULE"
 
 # Add files excluded by git archive
 cp submodules/docker-nginx-certbot/src/nginx_conf.d/*.conf docker/nginx/conf.d/
