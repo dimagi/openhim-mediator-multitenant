@@ -1,6 +1,3 @@
-[submodule "submodules/openhim-mediator-utils-py"]
-	path = submodules/openhim-mediator-utils-py
-	url = git@github.com:de-laz/openhim-mediator-utils-py.git
 [submodule "submodules/docker-nginx-certbot"]
 	path = submodules/docker-nginx-certbot
 	url = git@github.com:JonasAlfredsson/docker-nginx-certbot.git
