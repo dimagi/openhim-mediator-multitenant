@@ -19,7 +19,7 @@
       "name": "mediator",
       "image": "dimagi/openhim-mediator-passthrough:latest",
       "essential": true,
-      "memoryReservation": 512
+      "memoryReservation": 384
     },
     {
       "name": "nginx_certbot",
@@ -29,7 +29,7 @@
         {"name": "CERTBOT_EMAIL", "value": "{{ PROXY_CERTBOT_EMAIL }}"},
         {"name": "STAGING", "value": "{{ PROXY_CERTBOT_STAGING }}"}
       ],
-      "memoryReservation": 256,
+      "memoryReservation": 128,
       "portMappings": [
         {
           "hostPort": 80,
