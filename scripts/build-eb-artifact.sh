@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Creates an AWS Elastic Beanstalk artifact for deployment
 #
