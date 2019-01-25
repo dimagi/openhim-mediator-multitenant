@@ -1,0 +1,56 @@
+{
+  "AWSEBDockerrunVersion": "2",
+  "volumes": [
+    {
+      "name": "nginx_conf_d",
+      "host": {
+        "sourcePath": "/var/app/current/docker/nginx/conf.d"
+      }
+    },
+    {
+      "name": "etc_letsencrypt",
+      "host": {
+        "sourcePath": "{{ PROXY_LETSENCRYPT_VOLUME }}"
+      }
+    }
+  ],
+  "containerDefinitions": [
+    {
+      "name": "mediator",
+      "image": "dimagi/openhim-mediator-passthrough:latest",
+      "essential": true,
+      "memoryReservation": 512
+    },
+    {
+      "name": "nginx_certbot",
+      "image": "jonasal/nginx-certbot:latest",
+      "essential": true,
+      "environment" : [
+        {"name": "CERTBOT_EMAIL", "value": "{{ PROXY_CERTBOT_EMAIL }}"},
+        {"name": "STAGING", "value": "{{ PROXY_CERTBOT_STAGING }}"}
+      ],
+      "memoryReservation": 256,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 80
+        },
+        {
+          "hostPort": 443,
+          "containerPort": 443
+        }
+      ],
+      "links": ["mediator"],
+      "mountPoints": [
+        {
+          "sourceVolume": "nginx_conf_d",
+          "containerPath": "/etc/nginx/conf.d"
+        },
+        {
+          "sourceVolume": "etc_letsencrypt",
+          "containerPath": "/etc/letsencrypt"
+        }
+      ]
+    }
+  ]
+}
