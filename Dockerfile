@@ -13,6 +13,5 @@ RUN pip install --no-cache-dir -r src/openhim-mediator-utils/requirements.txt
 ENV PYTHONUNBUFFERED 1
 ENV DJANGO_SETTINGS_MODULE mediator.settings
 EXPOSE 8000/tcp
-WORKDIR /usr/src/openhim-mediator-passthrough/mediator/
 ENTRYPOINT ["docker/entrypoint.sh"]
 CMD ["--workers=2", "--bind=:8000"]
