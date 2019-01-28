@@ -34,6 +34,12 @@ export OPENHIM_APIURL='https://openhim.example.com/'
 # Should be True unless OpenHIM is using a self-signed certificate
 export OPENHIM_VERIFY_CERT=True
 
+# Whether to register the mediator with OpenHIM on startup
+export OPENHIM_REGISTER=True
+
+# Whether to send regular heartbeat calls to OpenHIM (requires OPENHIM_REGISTER=True)
+export OPENHIM_HEARTBEAT=True
+
 
 # Mediator settings
 
@@ -58,6 +64,7 @@ export MEDIATOR_UPSTREAM_URL="https://sampleApplication:7001"
 
 export DJANGO_SECRET_KEY='N3acC3293AlnecjLFlu5TprTlHsTYFODlM0BAW7eM4QtbBcBH7'
 export DJANGO_DEBUG=True
+
 # A space-separated list of hostnames:
 export DJANGO_ALLOWED_HOSTS=""
 
