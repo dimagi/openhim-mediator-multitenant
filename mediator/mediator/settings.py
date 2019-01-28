@@ -24,8 +24,8 @@ OPENHIM_OPTIONS = {
     'force_config': False,
     'interval': 10,
 
-    'register': True,
-    'heartbeat': True,
+    'register': os.environ['OPENHIM_REGISTER'].lower() not in ('0', 'false', 'no'),
+    'heartbeat': os.environ['OPENHIM_HEARTBEAT'].lower() not in ('0', 'false', 'no'),
 }
 
 MEDIATOR_CONF = {
