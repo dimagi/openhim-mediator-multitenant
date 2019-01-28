@@ -35,6 +35,8 @@
         {"name": "MEDIATOR_ROUTE_0_PATH", "value": "{{ MEDIATOR_ROUTE_0_PATH }}"},
         {"name": "MEDIATOR_ALLOW_ROLE", "value": "{{ MEDIATOR_ALLOW_ROLE }}"},
         {"name": "MEDIATOR_UPSTREAM_URL", "value": "{{ MEDIATOR_UPSTREAM_URL }}"},
+        {"name": "MEDIATOR_UPSTREAM_USERNAME", "value": "{{ MEDIATOR_UPSTREAM_USERNAME }}"},
+        {"name": "MEDIATOR_UPSTREAM_PASSWORD", "value": "{{ MEDIATOR_UPSTREAM_PASSWORD }}"},
         {"name": "DJANGO_SECRET_KEY", "value": "{{ DJANGO_SECRET_KEY }}"},
         {"name": "DJANGO_DEBUG", "value": "{{ DJANGO_DEBUG }}"},
         {"name": "DJANGO_ALLOWED_HOSTS", "value": "{{ DJANGO_ALLOWED_HOSTS }}"}
