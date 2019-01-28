@@ -12,6 +12,7 @@ env/*
 git-archive.tar.gz
 Dockerrun.aws.json
 eb-artifact.zip
+docker-compose.yaml
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
