@@ -65,7 +65,7 @@ export DJANGO_ALLOWED_HOSTS=""
 # Proxy settings
 
 # Valid values for False: "0", "False" or "No". All other values will be considered True.
-export PROXY_SSL_ENABLED=False
+export PROXY_HTTPS_ENABLED=False
 export PROXY_CERTBOT_EMAIL=admin@example.com
 export PROXY_CERTBOT_STAGING=1
 export PROXY_LETSENCRYPT_VOLUME=/dev/null
