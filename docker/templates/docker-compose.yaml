@@ -12,7 +12,7 @@ services:
       context: .
     image: openhim-mediator-passthrough
     ports:
-      - "8000:4000"
+      - "8000:8000"
     environment:
         OPENHIM_USERNAME: "{{ OPENHIM_USERNAME }}"
         OPENHIM_PASSWORD: "{{ OPENHIM_PASSWORD }}"
