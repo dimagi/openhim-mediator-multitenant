@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django.conf import settings
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 
 def get_http_headers(request_meta):
@@ -29,6 +30,7 @@ def get_body_string(request):
 
 
 # Extend the mediator by adding more routes/views
+@csrf_exempt
 def primary_route(request):
     """
     The passthrough mediator forwards the incoming request unchanged

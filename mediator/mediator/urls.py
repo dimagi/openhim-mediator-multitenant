@@ -13,10 +13,10 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.urls import path
+from django.urls import re_path
 
 from passthru.views import primary_route
 
 urlpatterns = [
-    path('', primary_route),
+    re_path('^.*$', primary_route),
 ]
