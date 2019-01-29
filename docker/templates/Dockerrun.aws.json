@@ -23,6 +23,8 @@
         {"name": "OPENHIM_PASSWORD", "value": "{{ OPENHIM_PASSWORD }}"},
         {"name": "OPENHIM_APIURL", "value": "{{ OPENHIM_APIURL }}"},
         {"name": "OPENHIM_VERIFY_CERT", "value": "{{ OPENHIM_VERIFY_CERT }}"},
+        {"name": "OPENHIM_REGISTER", "value": "{{ OPENHIM_REGISTER }}"},
+        {"name": "OPENHIM_HEARTBEAT", "value": "{{ OPENHIM_HEARTBEAT }}"},
         {"name": "MEDIATOR_URN", "value": "{{ MEDIATOR_URN }}"},
         {"name": "MEDIATOR_NAME", "value": "{{ MEDIATOR_NAME }}"},
         {"name": "MEDIATOR_DESCRIPTION", "value": "{{ MEDIATOR_DESCRIPTION }}"},
