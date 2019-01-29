@@ -1,7 +1,9 @@
 #!/bin/sh
 
+cd /usr/src/openhim-mediator-passthrough/mediator/
+
 # Register the mediator with OpenHIM
-/usr/local/bin/django-admin register
+python manage.py register
 
 # Append this scripts parameters to any Gunicorn settings specified
 # using its environment variable.
