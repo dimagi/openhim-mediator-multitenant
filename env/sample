@@ -27,8 +27,8 @@ fi
 export OPENHIM_USERNAME=user@example.com
 export OPENHIM_PASSWORD="secret"
 
-# The API URL of the OpenHIM instance:
-export OPENHIM_APIURL='https://openhim.example.com/'
+# The API URL of the OpenHIM instance. Omit final "/":
+export OPENHIM_APIURL='https://openhim.example.com:5000'
 
 # Valid values for False: "0", "False" or "No". All other values will be considered True.
 # Should be True unless OpenHIM is using a self-signed certificate
@@ -48,11 +48,11 @@ export MEDIATOR_NAME="Passthrough Mediator"
 export MEDIATOR_DESCRIPTION="This is a passthrough mediator"
 
 # Requests to this path will be forwarded to this mediator:
-export MEDIATOR_URL='/passthru/.*',
+export MEDIATOR_URL='^/passthru/.*$',
 
 export MEDIATOR_ROUTE_0_NAME="Passthrough Mediator Route"
 export MEDIATOR_ROUTE_0_HOST=localhost
-export MEDIATOR_ROUTE_0_PORT=4000
+export MEDIATOR_ROUTE_0_PORT=8000
 export MEDIATOR_ROUTE_0_PATH="/"
 
 export MEDIATOR_ALLOW_ROLE="Sample Role"
