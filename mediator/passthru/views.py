@@ -24,6 +24,14 @@ def get_http_headers(request_meta):
     return headers
 
 
+def drop_cookies(headers):
+    # openhim-core-js src/middleware/router.js setCookiesOnContext does
+    # not accept the cookie format used here. For now, just drop the
+    # Set-Cookie header
+    headers.pop('Set-Cookie', None)
+    return headers
+
+
 def forward_request_upstream(request):
     upstream_url = settings.MEDIATOR_CONF['config']['upstreamUrl']
     upstream_username = settings.MEDIATOR_CONF['config']['upstreamUsername']
@@ -63,7 +71,7 @@ def forward_request_upstream(request):
         },
         'response': {
             'status': response.status_code,
-            'headers': dict(response.headers),
+            'headers': drop_cookies(dict(response.headers)),
             'body': response.content.decode(response.encoding),
             'timestamp': str(response_ts),
         }
