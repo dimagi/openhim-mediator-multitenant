@@ -7,6 +7,28 @@ from django.http import JsonResponse, QueryDict
 from django.views.decorators.csrf import csrf_exempt
 
 
+def join_url(*args):
+    """
+    Joins parts of a url.
+
+    >>> join_url('https://example.com/', '/foo')
+    'https://example.com/foo'
+    >>> join_url('https://example.com/', 'api/', '/path/to/some/resource/')
+    'https://example.com/api/path/to/some/resource/'
+
+    """
+    parts = []
+    last_index = len(args) - 1
+    for i, arg in enumerate(args):
+        if i == 0:
+            parts.append(arg.rstrip('/'))
+        elif i == last_index:
+            parts.append(arg.lstrip('/'))
+        else:
+            parts.append(arg.strip('/'))
+    return '/'.join(parts)
+
+
 def get_http_headers(request_meta):
     """
     Returns request['META'] HTTP headers with keys transformed to normal
@@ -37,7 +59,7 @@ def forward_request_upstream(request):
     upstream_username = settings.MEDIATOR_CONF['config']['upstreamUsername']
     upstream_password = settings.MEDIATOR_CONF['config']['upstreamPassword']
 
-    url = '/'.join((upstream_url.rstrip('/'), request.path.lstrip('/')))
+    url = join_url(upstream_url, request.path)
     query_string = request.META['QUERY_STRING']
     body = request.body.decode(request.encoding) if request.body else ''
     try:
