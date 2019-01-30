@@ -54,6 +54,20 @@ def drop_cookies(headers):
     return headers
 
 
+def get_body_as_string(requonse):
+    """
+    Returns request.body or response.content as a string. Decodes using
+    the encoding given in the request or response headers.
+
+    Useful for serializing as JSON, because json.dumps() accepts strings
+    but not bytes.
+
+    :param requonse: A request or response object
+    """
+    body_bytes = requonse.body if hasattr(requonse, 'body') else requonse.content
+    return body_bytes.decode(requonse.encoding) if body_bytes else ''
+
+
 def forward_request_upstream(request):
     upstream_url = settings.MEDIATOR_CONF['config']['upstreamUrl']
     upstream_username = settings.MEDIATOR_CONF['config']['upstreamUsername']
@@ -61,7 +75,7 @@ def forward_request_upstream(request):
 
     url = join_url(upstream_url, request.path)
     query_string = request.META['QUERY_STRING']
-    body = request.body.decode(request.encoding) if request.body else ''
+    body = get_body_as_string(request)
     try:
         data = None
         json_data = json.loads(body)
@@ -94,7 +108,7 @@ def forward_request_upstream(request):
         'response': {
             'status': response.status_code,
             'headers': drop_cookies(dict(response.headers)),
-            'body': response.content.decode(response.encoding),
+            'body': get_body_as_string(response),
             'timestamp': str(response_ts),
         }
     }
