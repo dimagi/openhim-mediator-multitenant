@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.urls import re_path
 
-from passthru.views import primary_route
+from tenants.views import primary_route
 
 urlpatterns = [
     re_path('^.*$', primary_route),

@@ -10,7 +10,7 @@ services:
   mediator:
     build:
       context: .
-    image: openhim-mediator-passthrough
+    image: openhim-mediator-multitenant
     ports:
       - "8000:8000"
     environment:

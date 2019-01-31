@@ -7,7 +7,7 @@ from django.conf import settings
 from django.http import QueryDict
 from django.test import SimpleTestCase, Client, override_settings
 
-import passthru.views
+import tenants.views
 
 
 Response = namedtuple('Response', 'status_code headers content encoding')
@@ -31,7 +31,7 @@ class PrimaryRouteTests(SimpleTestCase):
         )
 
     def test_request(self):
-        with patch('passthru.views.requests.request') as request_mock:
+        with patch('tenants.views.requests.request') as request_mock:
             request_mock.return_value = self.response
 
             client = Client()
@@ -76,7 +76,7 @@ class PrimaryRouteTests(SimpleTestCase):
         #         }],
         #         'properties': {'property': 'Primary Route'}
         #     }
-        with patch('passthru.views.requests.request') as request_mock:
+        with patch('tenants.views.requests.request') as request_mock:
             request_mock.return_value = self.response
 
             client = Client()
@@ -97,5 +97,5 @@ class PrimaryRouteTests(SimpleTestCase):
 class DocTests(SimpleTestCase):
 
     def test_doctests(self):
-        results = doctest.testmod(passthru.views)
+        results = doctest.testmod(tenants.views)
         self.assertEqual(results.failed, 0)

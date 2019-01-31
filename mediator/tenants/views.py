@@ -118,7 +118,8 @@ def forward_request_upstream(request):
 @csrf_exempt
 def primary_route(request):
     """
-    The passthrough mediator forwards the incoming request unchanged
+    The mediator forwards the incoming request to the given path at the
+    tenant's upstream API.
     """
     # Extend the route by building out more complex orchestrations
     orchestrations = [forward_request_upstream(request)]

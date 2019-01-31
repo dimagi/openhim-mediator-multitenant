@@ -17,7 +17,7 @@
   "containerDefinitions": [
     {
       "name": "mediator",
-      "image": "dimagi/openhim-mediator-passthrough:latest",
+      "image": "dimagi/openhim-mediator-multitenant:latest",
       "environment": [
         {"name": "OPENHIM_USERNAME", "value": "{{ OPENHIM_USERNAME }}"},
         {"name": "OPENHIM_PASSWORD", "value": "{{ OPENHIM_PASSWORD }}"},
