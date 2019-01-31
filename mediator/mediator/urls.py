@@ -18,5 +18,5 @@ from django.urls import re_path
 from tenants.views import primary_route
 
 urlpatterns = [
-    re_path('^.*$', primary_route),
+    re_path(r'^a/(?P<tenant>[\w-]+)/(?P<upstream>[\w-]+)/(?P<path>.*)$', primary_route),
 ]

@@ -65,35 +65,7 @@ MEDIATOR_CONF = {
             'primary': True,
             'type': 'http',
         }
-    ],
-    'configDefs': [
-        {
-            'param': 'upstreamUrl',
-            'displayName': 'Upstream URL',
-            'description': 'The URL of the service upstream of the mediator',
-            'type': 'string',
-            'template': [],
-        },
-        {
-            'param': 'upstreamUsername',
-            'displayName': 'Upstream username',
-            'description': 'The username to authenticate with the upstream service',
-            'type': 'string',
-            'template': [],
-        },
-        {
-            'param': 'upstreamPassword',
-            'displayName': 'Upstream password',
-            'description': 'The password to authenticate with the upstream service',
-            'type': 'string',
-            'template': [],
-        }
-    ],
-    'config': {
-        'upstreamUrl': os.environ['MEDIATOR_UPSTREAM_URL'],
-        'upstreamUsername': os.environ['MEDIATOR_UPSTREAM_USERNAME'],
-        'upstreamPassword': os.environ['MEDIATOR_UPSTREAM_PASSWORD'],
-    }
+    ]
 }
 
 

@@ -57,10 +57,6 @@ export MEDIATOR_ROUTE_0_PATH="/"
 
 export MEDIATOR_ALLOW_ROLE="Sample Role"
 
-export MEDIATOR_UPSTREAM_URL="https://play.dhis2.org/2.31.0/api/"
-export MEDIATOR_UPSTREAM_USERNAME="admin"
-export MEDIATOR_UPSTREAM_PASSWORD="district"
-
 
 # Django settings
 

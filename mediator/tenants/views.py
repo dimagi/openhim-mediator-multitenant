@@ -4,7 +4,10 @@ from datetime import datetime
 import requests
 from django.conf import settings
 from django.http import JsonResponse, QueryDict
+from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
+
+from tenants.models import Tenant, Upstream
 
 
 def join_url(*args):
@@ -68,12 +71,8 @@ def get_body_as_string(requonse):
     return body_bytes.decode(requonse.encoding) if body_bytes else ''
 
 
-def forward_request_upstream(request):
-    upstream_url = settings.MEDIATOR_CONF['config']['upstreamUrl']
-    upstream_username = settings.MEDIATOR_CONF['config']['upstreamUsername']
-    upstream_password = settings.MEDIATOR_CONF['config']['upstreamPassword']
-
-    url = join_url(upstream_url, request.path)
+def forward_request_upstream(request, upstream, path):
+    url = join_url(upstream.base_url, path)
     query_string = request.META['QUERY_STRING']
     body = get_body_as_string(request)
     try:
@@ -91,7 +90,8 @@ def forward_request_upstream(request):
         data=data,
         json=json_data,
         headers=headers,
-        auth=(upstream_username, upstream_password)
+        auth=(upstream.username, upstream.password),
+        verify=upstream.verify_cert,
     )
     response_ts = datetime.utcnow()
 
@@ -114,15 +114,15 @@ def forward_request_upstream(request):
     }
 
 
-# Extend the mediator by adding more routes/views
 @csrf_exempt
-def primary_route(request):
+def primary_route(request, tenant, upstream, path):
     """
     The mediator forwards the incoming request to the given path at the
     tenant's upstream API.
     """
-    # Extend the route by building out more complex orchestrations
-    orchestrations = [forward_request_upstream(request)]
+    tenant = get_object_or_404(Tenant, short_name=tenant)
+    upstream = get_object_or_404(Upstream, tenant=tenant, short_name=upstream)
+    orchestrations = [forward_request_upstream(request, upstream, path)]
     primary_route_response = orchestrations[0]['response']
 
     data = {
