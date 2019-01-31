@@ -1,12 +1,50 @@
 import doctest
+from collections import namedtuple
+from copy import copy
+from unittest.mock import patch
 
 from django.conf import settings
-from django.test import TestCase, SimpleTestCase, Client
+from django.http import QueryDict
+from django.test import SimpleTestCase, Client, override_settings
 
 import passthru.views
 
 
-class PrimaryRouteTests(TestCase):
+Response = namedtuple('Response', 'status_code headers content encoding')
+mediator_conf = copy(settings.MEDIATOR_CONF)
+mediator_conf['config'] = {
+    'upstreamUrl': "https://play.dhis2.org/2.31.0/",
+    'upstreamUsername': 'admin',
+    'upstreamPassword': 'district',
+}
+
+
+@override_settings(MEDIATOR_CONF=mediator_conf)
+class PrimaryRouteTests(SimpleTestCase):
+
+    def setUp(self):
+        self.response = Response(
+            status_code=200,
+            headers={'content-type': 'application/json'},
+            content=b'Primary Route Reached',
+            encoding='UTF-8'
+        )
+
+    def test_request(self):
+        with patch('passthru.views.requests.request') as request_mock:
+            request_mock.return_value = self.response
+
+            client = Client()
+            client.get('/api/resources')
+            request_mock.assert_called_with(
+                'get',
+                'https://play.dhis2.org/2.31.0/api/resources',
+                auth=('admin', 'district'),
+                data='',
+                headers={'Cookie': ''},
+                json=None,
+                params=QueryDict({})
+            )
 
     def test_response(self):
         # Sample response:
@@ -38,14 +76,19 @@ class PrimaryRouteTests(TestCase):
         #         }],
         #         'properties': {'property': 'Primary Route'}
         #     }
-        client = Client()
-        response = client.get('/')
-        data = response.json()
+        with patch('passthru.views.requests.request') as request_mock:
+            request_mock.return_value = self.response
+
+            client = Client()
+            response = client.get('/api/resources')
+            data = response.json()
+
         self.assertEqual(response.status_code, 200)
         for key in ('x-mediator-urn', 'status', 'response', 'orchestrations', 'properties'):
             self.assertIn(key, data)
         self.assertEqual(data['x-mediator-urn'], settings.MEDIATOR_CONF['urn'])
         self.assertEqual(data['status'], 'Successful')
+        self.assertEqual(data['response']['status'], 200)
         self.assertEqual(len(data['orchestrations']), 1)
         self.assertEqual(data['orchestrations'][0]['name'], 'Primary Route')
         self.assertEqual(data['properties']['property'], 'Primary Route')

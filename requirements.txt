@@ -3,3 +3,4 @@ gunicorn==19.9.0
 Jinja2==2.10
 -e git+https://github.com/de-laz/openhim-mediator-utils-py.git@7ad8dd4#egg=openhim-mediator-utils
 pytz==2018.9
+requests==2.19.1
