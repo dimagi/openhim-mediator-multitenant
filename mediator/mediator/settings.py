@@ -126,6 +126,17 @@ INSTALLED_APPS = [
     'tenants',
 ]
 
+DATABASES = {
+    'default': {
+        'ENGINE': f'django.db.backends.{os.environ["DJANGO_DB_ENGINE"]}',
+        'NAME': os.environ['DJANGO_DB_NAME'],
+        'USER': os.environ['DJANGO_DB_USER'],
+        'PASSWORD': os.environ['DJANGO_DB_PASSWORD'],
+        'HOST': os.environ['DJANGO_DB_HOST'],
+        'PORT': os.environ['DJANGO_DB_PORT'],
+    }
+}
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

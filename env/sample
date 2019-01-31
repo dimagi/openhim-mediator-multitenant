@@ -70,6 +70,14 @@ export DJANGO_DEBUG=True
 # A space-separated list of hostnames:
 export DJANGO_ALLOWED_HOSTS=""
 
+# Valid values for DJANGO_DB_ENGINE are "mysql", "oracle", "postgresql" and "sqlite3"
+export DJANGO_DB_ENGINE=postgresql
+export DJANGO_DB_NAME=mediator
+export DJANGO_DB_USER=mediator_user
+export DJANGO_DB_PASSWORD=secret
+export DJANGO_DB_HOST=localhost
+export DJANGO_DB_PORT=5432
+
 
 # Proxy settings
 
