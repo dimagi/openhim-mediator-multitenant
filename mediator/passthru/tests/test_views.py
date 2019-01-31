@@ -1,38 +1,34 @@
 import doctest
 from collections import namedtuple
+from copy import copy
 from unittest.mock import patch
 
 from django.conf import settings
-from django.test import SimpleTestCase, Client
+from django.http import QueryDict
+from django.test import SimpleTestCase, Client, override_settings
 
 import passthru.views
 
 
 Response = namedtuple('Response', 'status_code headers content encoding')
+mediator_conf = copy(settings.MEDIATOR_CONF)
+mediator_conf['config'] = {
+    'upstreamUrl': "https://play.dhis2.org/2.31.0/",
+    'upstreamUsername': 'admin',
+    'upstreamPassword': 'district',
+}
 
 
+@override_settings(MEDIATOR_CONF=mediator_conf)
 class PrimaryRouteTests(SimpleTestCase):
 
     def setUp(self):
-        self.url = settings.MEDIATOR_CONF['config']['upstreamUrl']
-        self.username = settings.MEDIATOR_CONF['config']['upstreamUsername']
-        self.password = settings.MEDIATOR_CONF['config']['upstreamPassword']
-
-        settings.MEDIATOR_CONF['config']['upstreamUrl'] = 'https://play.dhis2.org/2.31.0/'
-        settings.MEDIATOR_CONF['config']['upstreamUsername'] = 'admin'
-        settings.MEDIATOR_CONF['config']['upstreamPassword'] = 'district'
-
         self.response = Response(
-            200,
-            {'content-type': 'application/json'},
-            b'Primary Route Reached',
-            'UTF-8'
+            status_code=200,
+            headers={'content-type': 'application/json'},
+            content=b'Primary Route Reached',
+            encoding='UTF-8'
         )
-
-    def tearDown(self):
-        settings.MEDIATOR_CONF['config']['upstreamUrl'] = self.url
-        settings.MEDIATOR_CONF['config']['upstreamUsername'] = self.username
-        settings.MEDIATOR_CONF['config']['upstreamPassword'] = self.password
 
     def test_request(self):
         with patch('passthru.views.requests.request') as request_mock:
@@ -47,7 +43,7 @@ class PrimaryRouteTests(SimpleTestCase):
                 data='',
                 headers={'Cookie': ''},
                 json=None,
-                params={}
+                params=QueryDict({})
             )
 
     def test_response(self):
