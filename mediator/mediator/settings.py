@@ -65,6 +65,67 @@ MEDIATOR_CONF = {
             'primary': True,
             'type': 'http',
         }
+    ],
+    'configDefs': [
+        {
+            'param': 'tenant',
+            'displayName': 'Tenant',
+            'description': 'Tenant',
+            'type': 'struct',
+            'template': [
+                {
+                    'param': 'short_name',
+                    'displayName': 'Short Name',
+                    'description': 'Short Name',
+                    'type': 'string'
+                },
+                {
+                    'param': 'name',
+                    'displayName': 'Name',
+                    'description': 'Name',
+                    'type': 'string',
+                },
+                {
+                    'param': 'upstreams',
+                    'displayName': 'Upstreams',
+                    'description': 'Upstreams',
+                    'type': 'struct',
+                    'array': True,
+                    'template': [
+                        {
+                            'param': 'short_name',
+                            'displayName': 'Short Name',
+                            'description': 'Short Name',
+                            'type': 'string'
+                        },
+                        {
+                            'param': 'base_url',
+                            'displayName': 'Upstream URL',
+                            'description': 'The base URL of the service upstream of the mediator',
+                            'type': 'string',
+                        },
+                        {
+                            'param': 'verify_cert',
+                            'displayName': 'Verify Certificate',
+                            'description': 'Verify Certificate',
+                            'type': 'bool',
+                        },
+                        {
+                            'param': 'username',
+                            'displayName': 'Upstream username',
+                            'description': 'The username to authenticate with the upstream service',
+                            'type': 'string',
+                        },
+                        {
+                            'param': 'password',
+                            'displayName': 'Upstream password',
+                            'description': 'The password to authenticate with the upstream service',
+                            'type': 'string',
+                        }
+                    ]
+                }
+            ]
+        }
     ]
 }
 
