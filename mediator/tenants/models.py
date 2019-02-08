@@ -8,6 +8,9 @@ class Tenant(models.Model):
     short_name = models.SlugField(max_length=200, unique=True)
     name = models.CharField(max_length=200)
 
+    def __str__(self):
+        return str(self.name)
+
 
 class Upstream(models.Model):
     """
@@ -20,6 +23,9 @@ class Upstream(models.Model):
     username = models.CharField(max_length=200)
     # NOTE: If settings.SECRET_KEY is changed, passwords cannot be decrypted
     _password = models.CharField(max_length=200)
+
+    def __str__(self):
+        return str(self.short_name)
 
     @property
     def password(self):
