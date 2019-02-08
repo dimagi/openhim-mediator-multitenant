@@ -21,6 +21,20 @@ then
     exit 1
 fi
 
+#
+# Make sure you change the values of MEDIATOR_URN and DJANGO_SECRET_KEY.
+#
+# You can generate a new UUID for MEDIATOR_URN using
+#
+#     $ uuidgen
+#
+# You can create a DJANGO_SECRET_KEY with
+#
+#     $ python -c "import random; \
+#         import string; \
+#         alphanum = string.ascii_letters + string.digits; \
+#         print(''.join(random.choice(alphanum) for __ in range(50)))"
+#
 
 # OpenHIM settings
 
