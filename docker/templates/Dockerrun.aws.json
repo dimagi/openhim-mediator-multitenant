@@ -8,6 +8,12 @@
       }
     },
     {
+      "name": "static_root",
+      "host": {
+        "sourcePath": "/var/app/current/mediator/mediator/static"
+      }
+    },
+    {
       "name": "etc_letsencrypt",
       "host": {
         "sourcePath": "{{ PROXY_LETSENCRYPT_VOLUME }}"
@@ -68,6 +74,11 @@
         {
           "sourceVolume": "nginx_conf_d",
           "containerPath": "/etc/nginx/conf.d"
+        },
+        {
+          "sourceVolume": "static_root",
+          "containerPath": "/usr/share/nginx/html",
+          "readOnly": true
         },
         {
           "sourceVolume": "etc_letsencrypt",

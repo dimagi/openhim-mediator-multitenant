@@ -172,4 +172,9 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/dev/howto/static-files/
+STATIC_ROOT = os.path.join(BASE_DIR, 'mediator', 'static')
+STATIC_URL = '/static/'
+
 AUTH_USER_MODEL = 'tenants.TenantUser'
