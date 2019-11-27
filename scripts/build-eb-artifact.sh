@@ -23,7 +23,9 @@ scripts/render-env.py docker/templates/mediator.conf > docker/nginx/conf.d/media
 scripts/render-env.py docker/templates/Dockerrun.aws.json > Dockerrun.aws.json
 
 # Add files excluded by git archive
+python mediator/manage.py collectstatic --noinput
 cp submodules/docker-nginx-certbot/src/nginx_conf.d/*.conf docker/nginx/conf.d/
+zip -r eb-artifact.zip mediator/mediator/static
 zip eb-artifact.zip docker/nginx/conf.d/*.conf
 zip eb-artifact.zip Dockerrun.aws.json
 

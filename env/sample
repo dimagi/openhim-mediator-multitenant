@@ -21,6 +21,20 @@ then
     exit 1
 fi
 
+#
+# Make sure you change the values of MEDIATOR_URN and DJANGO_SECRET_KEY.
+#
+# You can generate a new UUID for MEDIATOR_URN using
+#
+#     $ uuidgen
+#
+# You can create a DJANGO_SECRET_KEY with
+#
+#     $ python -c "import random; \
+#         import string; \
+#         alphanum = string.ascii_letters + string.digits; \
+#         print(''.join(random.choice(alphanum) for __ in range(50)))"
+#
 
 # OpenHIM settings
 
@@ -44,22 +58,18 @@ export OPENHIM_HEARTBEAT=True
 # Mediator settings
 
 export MEDIATOR_URN=01234567-89ab-cdef-0123-456789abcdef
-export MEDIATOR_NAME="Passthrough Mediator"
-export MEDIATOR_DESCRIPTION="This is a passthrough mediator"
+export MEDIATOR_NAME="Multi-tenant Mediator"
+export MEDIATOR_DESCRIPTION="This mediator supports multiple tenants, each with multiple upstream APIs."
 
 # Requests to this path will be forwarded to this mediator:
-export MEDIATOR_URL='^/passthru/.*$',
+export MEDIATOR_URL='^/a/(?P<tenant>[\\w-]+)/(?P<upstream>[\\w-]+)/.*$',
 
-export MEDIATOR_ROUTE_0_NAME="Passthrough Mediator Route"
+export MEDIATOR_ROUTE_0_NAME="Multi-tenant Mediator Route"
 export MEDIATOR_ROUTE_0_HOST=localhost
 export MEDIATOR_ROUTE_0_PORT=8000
 export MEDIATOR_ROUTE_0_PATH="/"
 
 export MEDIATOR_ALLOW_ROLE="Sample Role"
-
-export MEDIATOR_UPSTREAM_URL="https://play.dhis2.org/2.31.0/api/"
-export MEDIATOR_UPSTREAM_USERNAME="admin"
-export MEDIATOR_UPSTREAM_PASSWORD="district"
 
 
 # Django settings
@@ -69,6 +79,14 @@ export DJANGO_DEBUG=True
 
 # A space-separated list of hostnames:
 export DJANGO_ALLOWED_HOSTS=""
+
+# Valid values for DJANGO_DB_ENGINE are "mysql", "oracle", "postgresql" and "sqlite3"
+export DJANGO_DB_ENGINE=postgresql
+export DJANGO_DB_NAME=mediator
+export DJANGO_DB_USER=mediator_user
+export DJANGO_DB_PASSWORD=secret
+export DJANGO_DB_HOST=localhost
+export DJANGO_DB_PORT=5432
 
 
 # Proxy settings

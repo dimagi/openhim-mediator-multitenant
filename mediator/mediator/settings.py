@@ -65,35 +65,7 @@ MEDIATOR_CONF = {
             'primary': True,
             'type': 'http',
         }
-    ],
-    'configDefs': [
-        {
-            'param': 'upstreamUrl',
-            'displayName': 'Upstream URL',
-            'description': 'The URL of the service upstream of the mediator',
-            'type': 'string',
-            'template': [],
-        },
-        {
-            'param': 'upstreamUsername',
-            'displayName': 'Upstream username',
-            'description': 'The username to authenticate with the upstream service',
-            'type': 'string',
-            'template': [],
-        },
-        {
-            'param': 'upstreamPassword',
-            'displayName': 'Upstream password',
-            'description': 'The password to authenticate with the upstream service',
-            'type': 'string',
-            'template': [],
-        }
-    ],
-    'config': {
-        'upstreamUrl': os.environ['MEDIATOR_UPSTREAM_URL'],
-        'upstreamUsername': os.environ['MEDIATOR_UPSTREAM_USERNAME'],
-        'upstreamPassword': os.environ['MEDIATOR_UPSTREAM_PASSWORD'],
-    }
+    ]
 }
 
 
@@ -123,8 +95,19 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'passthru',
+    'tenants',
 ]
+
+DATABASES = {
+    'default': {
+        'ENGINE': f'django.db.backends.{os.environ["DJANGO_DB_ENGINE"]}',
+        'NAME': os.environ['DJANGO_DB_NAME'],
+        'USER': os.environ['DJANGO_DB_USER'],
+        'PASSWORD': os.environ['DJANGO_DB_PASSWORD'],
+        'HOST': os.environ['DJANGO_DB_HOST'],
+        'PORT': os.environ['DJANGO_DB_PORT'],
+    }
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -188,3 +171,10 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/dev/howto/static-files/
+STATIC_ROOT = os.path.join(BASE_DIR, 'mediator', 'static')
+STATIC_URL = '/static/'
+
+AUTH_USER_MODEL = 'tenants.TenantUser'

@@ -8,6 +8,12 @@
       }
     },
     {
+      "name": "static_root",
+      "host": {
+        "sourcePath": "/var/app/current/mediator/mediator/static"
+      }
+    },
+    {
       "name": "etc_letsencrypt",
       "host": {
         "sourcePath": "{{ PROXY_LETSENCRYPT_VOLUME }}"
@@ -17,7 +23,7 @@
   "containerDefinitions": [
     {
       "name": "mediator",
-      "image": "dimagi/openhim-mediator-passthrough:latest",
+      "image": "dimagi/openhim-mediator-multitenant:latest",
       "environment": [
         {"name": "OPENHIM_USERNAME", "value": "{{ OPENHIM_USERNAME }}"},
         {"name": "OPENHIM_PASSWORD", "value": "{{ OPENHIM_PASSWORD }}"},
@@ -68,6 +74,11 @@
         {
           "sourceVolume": "nginx_conf_d",
           "containerPath": "/etc/nginx/conf.d"
+        },
+        {
+          "sourceVolume": "static_root",
+          "containerPath": "/usr/share/nginx/html",
+          "readOnly": true
         },
         {
           "sourceVolume": "etc_letsencrypt",

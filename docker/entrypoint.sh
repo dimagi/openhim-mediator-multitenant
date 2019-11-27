@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cd /usr/src/openhim-mediator-passthrough/mediator/
+cd /usr/src/openhim-mediator-multitenant/mediator/
 
 # Register the mediator with OpenHIM
 python manage.py register
