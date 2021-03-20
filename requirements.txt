@@ -1,6 +1,6 @@
 Django==2.2.13
 gunicorn==19.9.0
-Jinja2==2.10.1
+Jinja2==2.11.3
 -e git+https://github.com/de-laz/openhim-mediator-utils-py.git@7ad8dd4#egg=openhim-mediator-utils
 cryptography==3.2
 pytz==2018.9
