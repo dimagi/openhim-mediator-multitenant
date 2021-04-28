@@ -1,7 +1,7 @@
-Django==2.2.18
-gunicorn==19.9.0
-Jinja2==2.11.3
--e git+https://github.com/de-laz/openhim-mediator-utils-py.git@7ad8dd4#egg=openhim-mediator-utils
-cryptography==3.3.2
-pytz==2018.9
-requests==2.21.0
+Django~=2.2
+gunicorn~=20.0
+Jinja2~=2.0
+-e git+https://github.com/de-laz/openhim-mediator-utils-py.git@de7069b#egg=openhim-mediator-utils
+cryptography~=3.0
+pytz==2021.1
+requests~=2.0
