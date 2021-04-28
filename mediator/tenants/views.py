@@ -10,26 +10,22 @@ from django.views.decorators.csrf import csrf_exempt
 from tenants.models import Tenant, Upstream
 
 
-def join_url(*args):
+def slash_join(*args: str) -> str:
     """
-    Joins parts of a url.
+    Joins arguments with a single ``/``. Useful for concatenating
+    strings to form a URL.
 
-    >>> join_url('https://example.com/', '/foo')
+    >>> slash_join('https://example.com/', '/foo')
     'https://example.com/foo'
-    >>> join_url('https://example.com/', 'api/', '/path/to/some/resource/')
-    'https://example.com/api/path/to/some/resource/'
+    >>> slash_join('https://example.com', 'api/', '/resource-type/')
+    'https://example.com/api/resource-type/'
 
     """
-    parts = []
-    last_index = len(args) - 1
-    for i, arg in enumerate(args):
-        if i == 0:
-            parts.append(arg.rstrip('/'))
-        elif i == last_index:
-            parts.append(arg.lstrip('/'))
-        else:
-            parts.append(arg.strip('/'))
-    return '/'.join(parts)
+    if not args:
+        return ''
+    append_slash = args[-1].endswith('/')
+    joined = '/'.join([arg.strip('/') for arg in args])
+    return joined + '/' if append_slash else joined
 
 
 def get_http_headers(request_meta):
@@ -72,7 +68,7 @@ def get_body_as_string(requonse):
 
 
 def forward_request_upstream(request, upstream, path):
-    url = join_url(upstream.base_url, path)
+    url = slash_join(upstream.base_url, path)
     query_string = request.META['QUERY_STRING']
     body = get_body_as_string(request)
     try:
