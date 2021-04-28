@@ -10,61 +10,25 @@ from django.views.decorators.csrf import csrf_exempt
 from tenants.models import Tenant, Upstream
 
 
-def slash_join(*args: str) -> str:
+@csrf_exempt
+def primary_route(request, tenant, upstream, path):
     """
-    Joins arguments with a single ``/``. Useful for concatenating
-    strings to form a URL.
-
-    >>> slash_join('https://example.com/', '/foo')
-    'https://example.com/foo'
-    >>> slash_join('https://example.com', 'api/', '/resource-type/')
-    'https://example.com/api/resource-type/'
-
+    The mediator forwards the incoming request to the given path at the
+    tenant's upstream API.
     """
-    if not args:
-        return ''
-    append_slash = args[-1].endswith('/')
-    joined = '/'.join([arg.strip('/') for arg in args])
-    return joined + '/' if append_slash else joined
+    tenant = get_object_or_404(Tenant, short_name=tenant)
+    upstream = get_upstream_or_404(tenant, upstream, request.method)
+    orchestrations = [forward_request_upstream(request, upstream, path)]
+    primary_route_response = orchestrations[0]['response']
 
-
-def get_http_headers(request_meta):
-    """
-    Returns request['META'] HTTP headers with keys transformed to normal
-    HTTP header keys.
-
-    >>> get_http_headers({'HTTP_ACCEPT_LANGUAGE': 'xh', 'SPAM': 'spam'})
-    {'Accept-Language': 'xh'}
-
-    """
-    headers = {k[5:].replace('_', '-').title(): v for k, v in request_meta.items() if k.startswith('HTTP_')}
-    if 'CONTENT_TYPE' in request_meta:
-        headers['Content-Type'] = request_meta['CONTENT_TYPE']
-    if 'CONTENT_LENGTH' in request_meta:
-        headers['Content-Length'] = request_meta['CONTENT_LENGTH']
-    return headers
-
-
-def drop_cookies(headers):
-    # openhim-core-js src/middleware/router.js setCookiesOnContext does
-    # not accept the cookie format used here. For now, just drop the
-    # Set-Cookie header
-    headers.pop('Set-Cookie', None)
-    return headers
-
-
-def get_body_as_string(requonse):
-    """
-    Returns request.body or response.content as a string. Decodes using
-    the encoding given in the request or response headers.
-
-    Useful for serializing as JSON, because json.dumps() accepts strings
-    but not bytes.
-
-    :param requonse: A request or response object
-    """
-    body_bytes = requonse.body if hasattr(requonse, 'body') else requonse.content
-    return body_bytes.decode(requonse.encoding) if body_bytes else ''
+    data = {
+        'x-mediator-urn': settings.MEDIATOR_CONF['urn'],
+        'status': 'Successful',
+        'response': primary_route_response,
+        'orchestrations': orchestrations,
+        'properties': {'property': 'Primary Route'},
+    }
+    return JsonResponse(data, content_type='application/json+openhim')
 
 
 def forward_request_upstream(request, upstream, path):
@@ -110,25 +74,61 @@ def forward_request_upstream(request, upstream, path):
     }
 
 
-@csrf_exempt
-def primary_route(request, tenant, upstream, path):
+def get_body_as_string(requonse):
     """
-    The mediator forwards the incoming request to the given path at the
-    tenant's upstream API.
-    """
-    tenant = get_object_or_404(Tenant, short_name=tenant)
-    upstream = get_upstream_or_404(tenant, upstream, request.method)
-    orchestrations = [forward_request_upstream(request, upstream, path)]
-    primary_route_response = orchestrations[0]['response']
+    Returns request.body or response.content as a string. Decodes using
+    the encoding given in the request or response headers.
 
-    data = {
-        'x-mediator-urn': settings.MEDIATOR_CONF['urn'],
-        'status': 'Successful',
-        'response': primary_route_response,
-        'orchestrations': orchestrations,
-        'properties': {'property': 'Primary Route'},
-    }
-    return JsonResponse(data, content_type='application/json+openhim')
+    Useful for serializing as JSON, because json.dumps() accepts strings
+    but not bytes.
+
+    :param requonse: A request or response object
+    """
+    body_bytes = requonse.body if hasattr(requonse, 'body') else requonse.content
+    return body_bytes.decode(requonse.encoding) if body_bytes else ''
+
+
+def get_http_headers(request_meta):
+    """
+    Returns request['META'] HTTP headers with keys transformed to normal
+    HTTP header keys.
+
+    >>> get_http_headers({'HTTP_ACCEPT_LANGUAGE': 'xh', 'SPAM': 'spam'})
+    {'Accept-Language': 'xh'}
+
+    """
+    headers = {k[5:].replace('_', '-').title(): v for k, v in request_meta.items() if k.startswith('HTTP_')}
+    if 'CONTENT_TYPE' in request_meta:
+        headers['Content-Type'] = request_meta['CONTENT_TYPE']
+    if 'CONTENT_LENGTH' in request_meta:
+        headers['Content-Length'] = request_meta['CONTENT_LENGTH']
+    return headers
+
+
+def drop_cookies(headers):
+    # openhim-core-js src/middleware/router.js setCookiesOnContext does
+    # not accept the cookie format used here. For now, just drop the
+    # Set-Cookie header
+    headers.pop('Set-Cookie', None)
+    return headers
+
+
+def slash_join(*args: str) -> str:
+    """
+    Joins arguments with a single ``/``. Useful for concatenating
+    strings to form a URL.
+
+    >>> slash_join('https://example.com/', '/foo')
+    'https://example.com/foo'
+    >>> slash_join('https://example.com', 'api/', '/resource-type/')
+    'https://example.com/api/resource-type/'
+
+    """
+    if not args:
+        return ''
+    append_slash = args[-1].endswith('/')
+    joined = '/'.join([arg.strip('/') for arg in args])
+    return joined + '/' if append_slash else joined
 
 
 def get_upstream_or_404(
