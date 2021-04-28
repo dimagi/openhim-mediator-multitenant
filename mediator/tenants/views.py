@@ -3,7 +3,7 @@ from datetime import datetime
 
 import requests
 from django.conf import settings
-from django.http import JsonResponse, QueryDict
+from django.http import Http404, JsonResponse, QueryDict
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
@@ -121,7 +121,7 @@ def primary_route(request, tenant, upstream, path):
     tenant's upstream API.
     """
     tenant = get_object_or_404(Tenant, short_name=tenant)
-    upstream = get_object_or_404(Upstream, tenant=tenant, short_name=upstream)
+    upstream = get_upstream_or_404(tenant, upstream, request.method)
     orchestrations = [forward_request_upstream(request, upstream, path)]
     primary_route_response = orchestrations[0]['response']
 
@@ -133,3 +133,24 @@ def primary_route(request, tenant, upstream, path):
         'properties': {'property': 'Primary Route'},
     }
     return JsonResponse(data, content_type='application/json+openhim')
+
+
+def get_upstream_or_404(
+        tenant: Tenant,
+        short_name: str,
+        method: str,
+) -> Upstream:
+    """
+    Filters Upstream instances by the given ``tenant``, ``short_name``
+    and HTTP ``method``. Raises ``Http404`` if there isn't exactly one
+    result.
+    """
+    upstreams = Upstream.objects.filter(
+        tenant=tenant,
+        short_name=short_name,
+    ).all()
+    upstreams = [u for u in upstreams
+                 if not u.http_methods or method in u.http_methods]
+    if len(upstreams) == 1:
+        return upstreams[0]
+    raise Http404('Unable to find an Upstream matching the given query.')
