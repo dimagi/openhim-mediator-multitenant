@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from typing import Optional
 
 import requests
 from django.conf import settings
@@ -34,7 +35,7 @@ def primary_route(request, tenant, upstream, path):
 def forward_request_upstream(request, upstream, path):
     url = slash_join(upstream.base_url, path)
     query_string = request.META['QUERY_STRING']
-    body = get_body_as_string(request)
+    body = decode(request.body, request.encoding)
     try:
         data = None
         json_data = json.loads(body)
@@ -68,24 +69,23 @@ def forward_request_upstream(request, upstream, path):
         'response': {
             'status': response.status_code,
             'headers': drop_cookies(dict(response.headers)),
-            'body': get_body_as_string(response),
+            'body': response.text(),
             'timestamp': str(response_ts),
         }
     }
 
 
-def get_body_as_string(requonse):
+def decode(bytes_: Optional[bytes], encoding: Optional[str]) -> str:
     """
-    Returns request.body or response.content as a string. Decodes using
-    the encoding given in the request or response headers.
+    Returns ``bytes_`` as a string. Decodes using ``encoding`` if given,
+    or falls back to ``settings.DEFAULT_CHARSET``.
 
-    Useful for serializing as JSON, because json.dumps() accepts strings
-    but not bytes.
-
-    :param requonse: A request or response object
+    Useful for serializing as JSON, because json.dumps() doesn't accept
+    bytes.
     """
-    body_bytes = requonse.body if hasattr(requonse, 'body') else requonse.content
-    return body_bytes.decode(requonse.encoding) if body_bytes else ''
+    if not encoding:
+        encoding = settings.DEFAULT_CHARSET
+    return bytes_.decode(encoding) if bytes_ else ''
 
 
 def get_http_headers(request_meta):
