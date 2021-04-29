@@ -45,7 +45,7 @@ def forward_request_upstream(request, upstream, path):
     headers = get_http_headers(request.META)
     request_ts = datetime.utcnow()
     response = requests.request(
-        request.method.lower(),
+        request.method,
         url,
         params=QueryDict(query_string),
         data=data,
@@ -97,7 +97,9 @@ def get_http_headers(request_meta):
     {'Accept-Language': 'xh'}
 
     """
-    headers = {k[5:].replace('_', '-').title(): v for k, v in request_meta.items() if k.startswith('HTTP_')}
+    headers = {k[5:].replace('_', '-').title(): v
+               for k, v in request_meta.items()
+               if k.startswith('HTTP_')}
     if 'CONTENT_TYPE' in request_meta:
         headers['Content-Type'] = request_meta['CONTENT_TYPE']
     if 'CONTENT_LENGTH' in request_meta:
