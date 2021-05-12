@@ -57,12 +57,12 @@ export OPENHIM_HEARTBEAT=True
 
 # Mediator settings
 
-export MEDIATOR_URN=01234567-89ab-cdef-0123-456789abcdef
+export MEDIATOR_URN=75b53ba9-8969-4e85-a7d3-6da79aee6cd1
 export MEDIATOR_NAME="Multi-tenant Mediator"
-export MEDIATOR_DESCRIPTION="This mediator supports multiple tenants, each with multiple upstream APIs."
+export MEDIATOR_DESCRIPTION="A pass-through mediator that supports multiple tenants, each with multiple upstream APIs."
 
 # Requests to this path will be forwarded to this mediator:
-export MEDIATOR_URL='^/a/(?P<tenant>[\\w-]+)/(?P<upstream>[\\w-]+)/.*$',
+export MEDIATOR_URL='^/a/(?P<tenant>[\\w-]+)/(?P<upstream>[\\w-]+)/.*$'
 
 export MEDIATOR_ROUTE_0_NAME="Multi-tenant Mediator Route"
 export MEDIATOR_ROUTE_0_HOST=localhost
