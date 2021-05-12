@@ -13,19 +13,23 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 
 
+def truthy(string):
+    return string.lower() not in ('0', 'false', 'no')
+
+
 # OpenHIM mediator settings
 
 OPENHIM_OPTIONS = {
     'username': os.environ['OPENHIM_USERNAME'],
     'password': os.environ['OPENHIM_PASSWORD'],
     'apiURL': os.environ['OPENHIM_APIURL'],
-    'verify_cert': os.environ['OPENHIM_VERIFY_CERT'].lower() not in ('0', 'false', 'no'),
+    'verify_cert': truthy(os.environ['OPENHIM_VERIFY_CERT']),
 
     'force_config': False,
     'interval': 10,
 
-    'register': os.environ['OPENHIM_REGISTER'].lower() not in ('0', 'false', 'no'),
-    'heartbeat': os.environ['OPENHIM_HEARTBEAT'].lower() not in ('0', 'false', 'no'),
+    'register': truthy(os.environ['OPENHIM_REGISTER']),
+    'heartbeat': truthy(os.environ['OPENHIM_HEARTBEAT']),
 }
 
 MEDIATOR_CONF = {
