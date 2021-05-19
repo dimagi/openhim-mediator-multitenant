@@ -90,8 +90,9 @@ def decode(bytes_: Optional[bytes], encoding: Optional[str]) -> str:
 
 def get_http_headers(request_meta):
     """
-    Returns request['META'] HTTP headers with keys transformed to normal
-    HTTP header keys.
+    Returns HTTP headers send by the downstream caller.
+
+    Transforms keys to normal HTTP header keys.
 
     >>> get_http_headers({'HTTP_ACCEPT_LANGUAGE': 'xh', 'SPAM': 'spam'})
     {'Accept-Language': 'xh'}
@@ -100,10 +101,14 @@ def get_http_headers(request_meta):
     headers = {k[5:].replace('_', '-').title(): v
                for k, v in request_meta.items()
                if k.startswith('HTTP_')}
-    if 'CONTENT_TYPE' in request_meta:
+    if request_meta.get('CONTENT_TYPE'):
         headers['Content-Type'] = request_meta['CONTENT_TYPE']
-    if 'CONTENT_LENGTH' in request_meta:
+    if request_meta.get('CONTENT_LENGTH'):
         headers['Content-Length'] = request_meta['CONTENT_LENGTH']
+    # Drop headers added by OpenHIM
+    headers.pop('X-Forwarded-For', None)
+    headers.pop('X-Forwarded-Host', None)
+    headers.pop('X-Openhim-Transactionid', None)
     return headers
 
 
