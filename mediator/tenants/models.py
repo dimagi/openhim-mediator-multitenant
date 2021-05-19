@@ -1,4 +1,7 @@
+import base64
 from cryptography.fernet import Fernet
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
@@ -59,15 +62,21 @@ class Upstream(models.Model):
 
     @property
     def password(self):
-        cipher_suite = Fernet(settings.SECRET_KEY)
-        plaintext_bytes = cipher_suite.decrypt(self._password)
+        if not self._password:
+            return ''
+        key = get_fernet_key()
+        fernet = Fernet(key)
+        base64_bytes = self._password.encode('ascii')
+        plaintext_bytes = fernet.decrypt(base64_bytes)
         return plaintext_bytes.decode('utf8')
 
     @password.setter
     def password(self, plaintext):
-        cipher_suite = Fernet(settings.SECRET_KEY)
+        key = get_fernet_key()
+        fernet = Fernet(key)
         plaintext_bytes = plaintext.encode('utf8')
-        self._password = cipher_suite.encrypt(plaintext_bytes)
+        base64_bytes = fernet.encrypt(plaintext_bytes)
+        self._password = base64_bytes.decode('ascii')
 
 
 class TenantUser(AbstractUser):
@@ -76,3 +85,15 @@ class TenantUser(AbstractUser):
         on_delete=models.CASCADE,
         null=True,  # Superusers do not have a Tenant
     )
+
+
+def get_fernet_key() -> bytes:
+    salt = b'openhim-mediator-multitenant---'  # Can't be random
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,
+        salt=salt,
+        iterations=100000,
+    )
+    secret_key = settings.SECRET_KEY.encode('ascii')
+    return base64.urlsafe_b64encode(kdf.derive(secret_key))

@@ -43,6 +43,10 @@ def forward_request_upstream(request, upstream, path):
         data = body
         json_data = None
     headers = get_http_headers(request.META)
+    if upstream.username or upstream.password:
+        auth = (upstream.username, upstream.password)
+    else:
+        auth = None
     request_ts = datetime.utcnow()
     response = requests.request(
         request.method,
@@ -51,7 +55,7 @@ def forward_request_upstream(request, upstream, path):
         data=data,
         json=json_data,
         headers=headers,
-        auth=(upstream.username, upstream.password),
+        auth=auth,
         verify=upstream.verify_cert,
     )
     response_ts = datetime.utcnow()
