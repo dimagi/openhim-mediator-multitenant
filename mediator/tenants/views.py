@@ -69,7 +69,7 @@ def forward_request_upstream(request, upstream, path):
         'response': {
             'status': response.status_code,
             'headers': drop_cookies(dict(response.headers)),
-            'body': response.text(),
+            'body': response.text,
             'timestamp': str(response_ts),
         }
     }
