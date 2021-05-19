@@ -71,4 +71,8 @@ class Upstream(models.Model):
 
 
 class TenantUser(AbstractUser):
-    tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True)  # Superusers do not have a Tenant
+    tenant = models.ForeignKey(
+        Tenant,
+        on_delete=models.CASCADE,
+        null=True,  # Superusers do not have a Tenant
+    )
