@@ -48,7 +48,10 @@ class Upstream(models.Model):
     _password = models.CharField(max_length=200, blank=True)
 
     def __str__(self):
-        return str(self.short_name)
+        if self.http_methods:
+            return f'{self.short_name} ({self.http_methods})'
+        else:
+            return str(self.short_name)
 
     def save(self, *args, **kwargs):
         self.http_methods = self.http_methods.upper()
