@@ -40,12 +40,12 @@ class Upstream(models.Model):
     short_name = models.SlugField(max_length=200, db_index=True)
     base_url = models.URLField()
     # A space-separated list of HTTP methods or an empty string to denote all
-    http_methods = models.CharField(max_length=200, default='',
+    http_methods = models.CharField(max_length=200, default='', blank=True,
                                     validators=[validate_http_methods])
     verify_cert = models.BooleanField(default=True)
-    username = models.CharField(max_length=200)
+    username = models.CharField(max_length=200, blank=True)
     # NOTE: If settings.SECRET_KEY is changed, passwords cannot be decrypted
-    _password = models.CharField(max_length=200)
+    _password = models.CharField(max_length=200, blank=True)
 
     def __str__(self):
         return str(self.short_name)

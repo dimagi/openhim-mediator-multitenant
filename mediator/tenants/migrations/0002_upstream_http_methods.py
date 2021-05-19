@@ -14,6 +14,7 @@ class Migration(migrations.Migration):
             name='http_methods',
             field=models.CharField(
                 default='',
+                blank=True,
                 max_length=200,
                 validators=[tenants.models.validate_http_methods]
             ),
